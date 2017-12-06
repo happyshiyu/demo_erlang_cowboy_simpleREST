@@ -1,0 +1,13 @@
+{application, sample,
+ [{description, "Sample HTTP rest CRUD app"}
+ ,{vsn, "0.1.0"}
+ ,{modules, []}
+ ,{registered, []}
+ ,{applications, [kernel
+                 ,stdlib
+                 ,lager
+                 ,jsx
+                 ,cowboy
+                 ]}
+ ,{mod, {sample_app, []}}
+ ]}.

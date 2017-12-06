@@ -1,0 +1,6 @@
+-name demo_erlang_cowboy_simpleREST@127.0.0.1
+
+-setcookie demo_erlang_cowboy_simpleREST
+
++A 100
++K true

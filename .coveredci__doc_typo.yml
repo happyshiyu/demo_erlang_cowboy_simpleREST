@@ -1,0 +1,26 @@
+version: 0
+
+documentation:
+  kind: openapi_v2
+  file: priv/openapi2v1.yml
+  host: localhost
+  port: 6773
+
+
+# Documentation validation errors will show up when running
+# * `testman validate` or
+# * `testman test`
+# as documentation validation is the first step.
+# Note though that once that beofre the 'start' step is executed,
+#  no changes to documentation will be taken into account.
+
+start:
+  - |
+    until RELX_REPLACE_OS_VARS=true ./_build/prod/rel/sample/bin/sample status 1>&2; do
+      RELX_REPLACE_OS_VARS=true ./_build/prod/rel/sample/bin/sample start 1>&2
+      sleep 1
+    done
+    # A typo was introduced in documentation in .travis.yml!
+
+stop:
+  - RELX_REPLACE_OS_VARS=true ./_build/prod/rel/sample/bin/sample stop 1>&2

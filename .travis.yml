@@ -1,0 +1,41 @@
+sudo: false
+language: erlang
+otp_release: 20.1
+
+before_script:
+  - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
+  - chmod +x /usr/local/bin/rebar3
+  - rebar3 --version
+  - sh <(curl -sfSL https://goo.gl/Wb1JeU)
+  - testman --version
+script:
+  - rebar3 as prod release
+  - if [[ $YML != .coveredci.yml ]]; then cp $YML .coveredci.yml; fi
+  - |
+    if [[ $YML == .coveredci__doc_typo.yml ]]; then
+      sed -i s/consumes:/consume:/ priv/openapi2v1.yml
+    fi
+  - testman validate; [[ $? -eq $V ]]
+  - testman test; [[ $? -eq $T ]]
+after_failure:
+  - tail -n 999 /tmp/.testman_*_*.log
+after_script:
+  - set +e
+
+matrix:
+  include:
+    - env: YML=.coveredci__start_reset_stop_docker.yml V=0 T=0
+      services: docker
+    - env: YML=.coveredci__start_reset_stop.yml V=0 T=0
+    - env: YML=.coveredci.yml V=0 T=0
+    - env: YML=.coveredci__env.yml V=0 T=0
+    - env: YML=.coveredci__doc_typo.yml V=2 T=2
+
+env:
+  global:
+    # secure: COVEREDCI_API_KEY=...
+    secure: gyFFHns9Ubq1wYjAD7v0Lea6bMNhI3pcQ6l8vquF7yIruDCdYWX3X9xnjJttM2hnSN2mfse1kplMFMNE534481YDZBUVzpf3DqCB00v0UdAC5xhqXALBu7NEuov+IHo4Z/y5CjNmZyN6d5RDtPisHuLBlyP0+lIf0eavgEE/VczTPXl38RCtlRFqnl/UtbUjGth1h5NB01Ap+Lrl73iykXGo5NEb1TlFV/b+k/pmbcsZ75hZqRhMtD2sq6cIgzJjdxBtFya1yF17jHv2jxy+xQ0d2CWEBNPPX/gqigb2gamaqgglxgh6NJTY+BF2Wzfpb472ZNcIEkV8PZAQ0dvXODzskGE4l6Yml59rNarGPgv2dkp33EdipMqyg3ZYLuMT0WSI2E0OOwYVhj/2amuW7webyHHmMwkCzrwrNRxGtfTLZ4g+K7X9K55fqON2PlHvwonnE9iH3JWo2JHrfcowvWEc7UJp01k2aZO+6jcNLDqciuMy3tuBp8erJN7AW7ro/Bi0DCher6KwCU+2XLAIlUPBc4bAY5H4O9MXsL8IOBEVg4tc7pA43SXeDpFjknLAzZzy1St37EJ204SymQ5baJSc+YberWbo/IhMJz7HmIdJ8Nbva70+l6E9t8QrZC78Fe5OfZt32xGFzCEQhvJM7J799R24P5tSyo7hIdKbyss=
+
+notifications:
+  email:
+    on_success: never
