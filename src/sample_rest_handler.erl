@@ -73,7 +73,13 @@ id(Req) ->
         <<"PATCH">> ->
             ItemId = id(Req2),
             Rep = sample_crud_store:patch(ItemId, Item),
-            Req3 = cowboy_req:set_resp_body(jsx:encode(Rep), Req2),
+            MaybeAlteredRep = case 0 =:= ItemId of
+                                  false -> Rep;
+                                  true ->
+                                      lager:info("triggering a bug"),
+                                      maps:put(<<"name">>, <<"Mr. Buggybug">>, Rep)
+                              end,
+            Req3 = cowboy_req:set_resp_body(jsx:encode(MaybeAlteredRep), Req2),
             lager:debug("PATCH ~p", [ItemId]),
             {true, Req3, State};
         <<"PUT">> ->
