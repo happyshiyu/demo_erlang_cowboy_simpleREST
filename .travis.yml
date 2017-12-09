@@ -15,6 +15,10 @@ script:
     if [[ $YML == .coveredci__doc_typo.yml ]]; then
       sed -i s/consumes:/consume:/ priv/openapi2v1.yml
     fi
+  - |
+    if [[ $YML == .coveredci__doc_typo_json.yml ]]; then
+      sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
+    fi
   - testman validate; [[ $? -eq $V ]]
   - testman test; [[ $? -eq $T ]]
 after_failure:
@@ -27,9 +31,11 @@ matrix:
     - env: YML=.coveredci__start_reset_stop_docker.yml V=0 T=0
       services: docker
     - env: YML=.coveredci__start_reset_stop.yml V=0 T=0
+    - env: YML=.coveredci__start_reset_stop_json.yml V=0 T=0
     - env: YML=.coveredci.yml V=0 T=0
     - env: YML=.coveredci__env.yml V=0 T=0
     - env: YML=.coveredci__doc_typo.yml V=2 T=2
+    - env: YML=.coveredci__doc_typo_json.yml V=2 T=2
 
 env:
   global:

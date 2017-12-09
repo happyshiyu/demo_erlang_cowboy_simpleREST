@@ -19,22 +19,32 @@ Ts[$i]=0
 YMLs[$i]=.coveredci__start_reset_stop.yml
 Vs[$i]=0
 Ts[$i]=0
-((i++))
+((i+=1))
+
+YMLs[$i]=.coveredci__start_reset_stop_json.yml
+Vs[$i]=0
+Ts[$i]=0
+((i+=1))
 
 YMLs[$i]=.coveredci.yml
 Vs[$i]=0
 Ts[$i]=0
-((i++))
+((i+=1))
 
 YMLs[$i]=.coveredci__env.yml
 Vs[$i]=0
 Ts[$i]=0
-((i++))
+((i+=1))
 
 YMLs[$i]=.coveredci__doc_typo.yml
 Vs[$i]=2
 Ts[$i]=2
-((i++))
+((i+=1))
+
+YMLs[$i]=.coveredci__doc_typo_json.yml
+Vs[$i]=2
+Ts[$i]=2
+((i+=1))
 
 
 testman=${TESTMAN:-testman}
@@ -50,6 +60,9 @@ for i in "${!YMLs[@]}"; do
     if [[ $YML == .coveredci__doc_typo.yml ]]; then
         sed -i s/consumes:/consume:/ priv/openapi2v1.yml
     fi
+    if [[ $YML == .coveredci__doc_typo_json.yml ]]; then
+        sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
+    fi
 
     set +e
     $testman validate; code=$?
@@ -60,5 +73,9 @@ for i in "${!YMLs[@]}"; do
     set -e
     [[ $code -eq $V ]]
     set +e
+
+    git checkout -- .coveredci.yml
+    git checkout -- priv/openapi2v1.yml
+    git checkout -- priv/openapi2v1.json
 
 done
