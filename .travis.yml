@@ -21,6 +21,13 @@ script:
     fi
   - testman validate; [[ $? -eq $V ]]
   - testman test; [[ $? -eq $T ]]
+  - |
+    if [[ $YML == .coveredci__start_reset_stop_docker.yml ]]; then
+      [[ 0 -eq $(docker ps -q | wc -l) ]]
+    else
+      ! which docker
+      ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items
+    fi
 after_failure:
   - tail -n 999 /tmp/.testman_*_*.log
 after_script:

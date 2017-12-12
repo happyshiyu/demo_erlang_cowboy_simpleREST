@@ -78,4 +78,7 @@ for i in "${!YMLs[@]}"; do
     git checkout -- priv/openapi2v1.yml
     git checkout -- priv/openapi2v1.json
 
+    [[ 0 -eq $(docker ps -q | wc -l) ]]
+    ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items
+
 done
