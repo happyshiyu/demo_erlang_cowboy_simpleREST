@@ -76,7 +76,7 @@ for i in "${!YMLs[@]}"; do
     set +e
     $testman test; code=$?
     set -e
-    [[ $code -eq $V ]]
+    [[ $code -eq $T ]]
     set +e
 
     git checkout -- .coveredci.yml
