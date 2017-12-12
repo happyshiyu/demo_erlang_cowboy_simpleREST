@@ -39,6 +39,7 @@ matrix:
       services: docker
     - env: YML=.coveredci__start_reset_stop.yml V=0 T=0
     - env: YML=.coveredci__start_reset_stop_json.yml V=0 T=0
+    - env: YML=.coveredci__start_reset_stop_failing_script.yml V=0 T=1
     - env: YML=.coveredci.yml V=0 T=0
     - env: YML=.coveredci__env.yml V=0 T=0
     - env: YML=.coveredci__doc_typo.yml V=2 T=2

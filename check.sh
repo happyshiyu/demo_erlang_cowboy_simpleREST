@@ -26,6 +26,11 @@ Vs[$i]=0
 Ts[$i]=0
 ((i+=1))
 
+YMLs[$i]=.coveredci__start_reset_stop_failing_script.yml
+Vs[$i]=0
+Ts[$i]=1
+((i+=1))
+
 YMLs[$i]=.coveredci.yml
 Vs[$i]=0
 Ts[$i]=0
