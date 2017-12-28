@@ -6,7 +6,7 @@ before_script:
   - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x /usr/local/bin/rebar3
   - rebar3 --version
-  - sh <(curl -sfSL https://goo.gl/Wb1JeU)
+  - sh <(curl -sfSL https://goo.gl/Wb1JeU -A 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0' -e 'https://travis-ci.org/CoveredCI/demo_erlang_cowboy_simpleREST')
   - testman --version
 script:
   - rebar3 as prod release
