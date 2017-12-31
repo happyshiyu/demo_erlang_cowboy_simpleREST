@@ -28,12 +28,12 @@ environment:
 install:
   - choco install erlang --version 20.0
   - choco install rebar3
-  - echo $PATH
-  - "for p in $(echo $PATH |tr : ' '); do echo .$p. && touch $p/_; done"
+  - echo %PATH%
+  - "for p in $(echo %PATH% |tr : ' '); do echo .%p%. && touch %p%/_; done"
   - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x /usr/local/bin/rebar3
   - rebar3 --version
-  - sh <(curl -sfSL https://goo.gl/Wb1JeU -A "$U" -e "$R")
+  - sh <(curl -sfSL https://goo.gl/Wb1JeU -A "%U%" -e "%R%")
   - testman --version
 
 build:
@@ -41,16 +41,16 @@ build:
 
 build_script:
   - rebar3 as prod release
-  - if [[ $YML != .coveredci.yml ]]; then cp $YML .coveredci.yml; fi
+  - if [[ %YML% != .coveredci.yml ]]; then cp %YML% .coveredci.yml; fi
   - |
-    if [[ $YML == .coveredci__doc_typo.yml ]]; then
+    if [[ %YML% == .coveredci__doc_typo.yml ]]; then
       sed -i s/consumes:/consume:/ priv/openapi2v1.yml
     fi
   - |
-    if [[ $YML == .coveredci__doc_typo_json.yml ]]; then
+    if [[ %YML% == .coveredci__doc_typo_json.yml ]]; then
       sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
     fi
-  - testman validate; [[ $? -eq $V ]]
+  - testman validate; [[ $? -eq %V% ]]
   - testman test; [[ $? -eq $T ]]
   - |
     if [[ $YML == .coveredci__start_reset_stop_docker.yml ]]; then
