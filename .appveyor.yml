@@ -1,0 +1,62 @@
+environment:
+  U: 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'
+  R: 'https://travis-ci.org/CoveredCI/demo_erlang_cowboy_simpleREST'
+  matrix:
+    # - YML=.coveredci__start_reset_stop_docker.yml V=0 T=0
+    - YML: .coveredci__start_reset_stop.yml
+      V: 0
+      T: 0
+    - YML: .coveredci__start_reset_stop_json.yml
+      V: 0
+      T: 0
+    - YML: .coveredci__start_reset_stop_failing_script.yml
+      V: 0
+      T: 1
+    - YML: .coveredci.yml
+      V: 0
+      T: 0
+    - YML: .coveredci__env.yml
+      V: 0
+      T: 0
+    - YML: .coveredci__doc_typo.yml
+      V: 2
+      T: 2
+    - YML: .coveredci__doc_typo_json.yml
+      V: 2
+      T: 2
+
+install:
+  - choco install erlang --version 20.0
+  - choco install rebar3
+  - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
+  - chmod +x /usr/local/bin/rebar3
+  - rebar3 --version
+  - sh <(curl -sfSL https://goo.gl/Wb1JeU -A "$U" -e "$R")
+  - testman --version
+
+build:
+  parallel: true
+
+build_script:
+  - rebar3 as prod release
+  - if [[ $YML != .coveredci.yml ]]; then cp $YML .coveredci.yml; fi
+  - |
+    if [[ $YML == .coveredci__doc_typo.yml ]]; then
+      sed -i s/consumes:/consume:/ priv/openapi2v1.yml
+    fi
+  - |
+    if [[ $YML == .coveredci__doc_typo_json.yml ]]; then
+      sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
+    fi
+  - testman validate; [[ $? -eq $V ]]
+  - testman test; [[ $? -eq $T ]]
+  - |
+    if [[ $YML == .coveredci__start_reset_stop_docker.yml ]]; then
+      [[ 0 -eq $(docker ps -q | wc -l) ]]
+    else
+      ! which docker
+      ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items
+    fi
+
+on_failure:
+  - tail -n 999 /tmp/.testman_*_*.log
