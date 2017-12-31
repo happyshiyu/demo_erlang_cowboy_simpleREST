@@ -29,7 +29,7 @@ install:
   - choco install erlang --version 20.0
   - choco install rebar3
   - echo $PATH
-  - for p in $(echo $PATH |tr : ' '); do echo .$p. && touch $p/_; done
+  - "for p in $(echo $PATH |tr : ' '); do echo .$p. && touch $p/_; done"
   - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x /usr/local/bin/rebar3
   - rebar3 --version
