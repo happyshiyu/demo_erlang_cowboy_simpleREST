@@ -6,7 +6,7 @@ set -o errexit
 set -o errtrace
 set -o nounset
 set -o pipefail
-set -x
+set -o xtrace
 
 declare -a YMLs Vs Ts
 declare -i i=0
@@ -56,11 +56,8 @@ testman=${TESTMAN:-testman}
 $testman --version
 rebar3 as prod release
 
-for i in "${!YMLs[@]}"; do
-    YML=${YMLs[$i]}
-    V=${Vs[$i]}
-    T=${Ts[$i]}
-
+check() {
+    printf '\e[1;3m%s\e[0m\n' "$YML"
     if [[ $YML != .coveredci.yml ]]; then cp $YML .coveredci.yml; fi
     if [[ $YML == .coveredci__doc_typo.yml ]]; then
         sed -i s/consumes:/consume:/ priv/openapi2v1.yml
@@ -85,5 +82,18 @@ for i in "${!YMLs[@]}"; do
 
     [[ 0 -eq $(docker ps -q | wc -l) ]]
     ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items
+}
 
+YML=${YML:-}
+for i in "${!YMLs[@]}"; do
+    V=${Vs[$i]}
+    T=${Ts[$i]}
+
+    if [[ -z "$YML" ]]; then
+        YML=${YMLs[$i]} V=$V T=$T check
+    else
+        if [[ $YML = ${YMLs[$i]} ]]; then
+            YML=$YML V=$V T=$T check
+        fi
+    fi
 done
