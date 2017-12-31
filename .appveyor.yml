@@ -6,28 +6,30 @@ environment:
     - YML: .coveredci__start_reset_stop.yml
       V: 0
       T: 0
-    - YML: .coveredci__start_reset_stop_json.yml
-      V: 0
-      T: 0
-    - YML: .coveredci__start_reset_stop_failing_script.yml
-      V: 0
-      T: 1
-    - YML: .coveredci.yml
-      V: 0
-      T: 0
-    - YML: .coveredci__env.yml
-      V: 0
-      T: 0
-    - YML: .coveredci__doc_typo.yml
-      V: 2
-      T: 2
-    - YML: .coveredci__doc_typo_json.yml
-      V: 2
-      T: 2
+    # - YML: .coveredci__start_reset_stop_json.yml
+    #   V: 0
+    #   T: 0
+    # - YML: .coveredci__start_reset_stop_failing_script.yml
+    #   V: 0
+    #   T: 1
+    # - YML: .coveredci.yml
+    #   V: 0
+    #   T: 0
+    # - YML: .coveredci__env.yml
+    #   V: 0
+    #   T: 0
+    # - YML: .coveredci__doc_typo.yml
+    #   V: 2
+    #   T: 2
+    # - YML: .coveredci__doc_typo_json.yml
+    #   V: 2
+    #   T: 2
 
 install:
   - choco install erlang --version 20.0
   - choco install rebar3
+  - echo $PATH
+  - for p in $(echo $PATH |tr : ' '); do echo .$p. && touch $p/_; done
   - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x /usr/local/bin/rebar3
   - rebar3 --version
