@@ -33,7 +33,9 @@ install:
   - curl -# --fail --output "C:\Program Files\Git\usr\bin\rebar3" https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x "C:\Program Files\Git\usr\bin\rebar3"
   - rebar3 --version
-  - sh <(curl -sfSL https://goo.gl/Wb1JeU -A "%U%" -e "%R%")
+  - curl -o /tmp/eh -sfSL https://goo.gl/Wb1JeU -A "%U%" -e "%R%"
+  - chmod +x /tmp/eh
+  - /tmp/eh
   - testman --version
 
 build:
