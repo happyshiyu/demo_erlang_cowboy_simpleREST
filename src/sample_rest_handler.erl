@@ -1,4 +1,5 @@
 -module(sample_rest_handler).
+-behaviour(cowboy_handler).
 
 %% Standard callbacks.
 -export([init/2]).
