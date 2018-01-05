@@ -29,6 +29,8 @@ install:
   - choco install erlang --version 20.0
   - choco install rebar3
   - rebar3 --version
+  - appveyor DownloadFile https://github.com/FuzzyMonkeyCo/monkey/releases/download/0.14.0/testman-Windows-x86_64.exe
+  - ls -lha
   - appveyor DownloadFile https://goo.gl/Wb1JeU #-FileName /tmp/eh
   - ls -lha
   # - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
