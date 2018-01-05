@@ -29,8 +29,8 @@ install:
   - choco install erlang --version 20.0
   - choco install rebar3
   - rebar3 --version
-  - touch /tmp/coucou
-  - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
+  - appveyor DownloadFile https://goo.gl/Wb1JeU -FileName /tmp/eh
+  # - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
   - chmod +x /tmp/eh
   - /tmp/eh --version
 
