@@ -27,16 +27,12 @@ environment:
 
 install:
   - choco install erlang --version 20.0
-  - choco install rebar3
-  - echo %PATH%
-  # - "for p in $(echo %PATH% |tr : ' '); do echo .%p%. && touch %p%/_; done"
   - curl -# --fail --output "C:\Program Files\Git\usr\bin\rebar3" https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x "C:\Program Files\Git\usr\bin\rebar3"
   - rebar3 --version
-  - curl -o /tmp/eh -sfSL https://goo.gl/Wb1JeU -A "%U%" -e "%R%"
+  - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
   - chmod +x /tmp/eh
-  - /tmp/eh
-  - testman --version
+  - /tmp/eh --version
 
 build:
   parallel: true
