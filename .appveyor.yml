@@ -29,10 +29,11 @@ install:
   - choco install erlang --version 20.0
   - choco install rebar3
   - rebar3 --version
-  - appveyor DownloadFile https://goo.gl/Wb1JeU -FileName /tmp/eh
+  - appveyor DownloadFile https://goo.gl/Wb1JeU #-FileName /tmp/eh
+  - ls -lha
   # - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
-  - chmod +x /tmp/eh
-  - /tmp/eh --version
+  - chmod +x testman.exe
+  - ./testman.exe --version
 
 build:
   parallel: true
