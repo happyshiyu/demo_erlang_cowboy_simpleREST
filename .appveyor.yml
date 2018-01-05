@@ -27,8 +27,7 @@ environment:
 
 install:
   - choco install erlang --version 20.0
-  - curl -# --fail --output "C:\Program Files\Git\usr\bin\rebar3" https://s3.amazonaws.com/rebar3/rebar3
-  - chmod +x "C:\Program Files\Git\usr\bin\rebar3"
+  - choco install rebar3
   - rebar3 --version
   - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
   - chmod +x /tmp/eh
