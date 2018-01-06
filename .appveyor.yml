@@ -1,27 +1,27 @@
 environment:
   U: 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'
-  R: 'https://travis-ci.org/CoveredCI/demo_erlang_cowboy_simpleREST'
+  R: 'https://travis-ci.org/FuzzyMonkeyCo/demo_erlang_cowboy_simpleREST'
   matrix:
-    # - YML=.coveredci__start_reset_stop_docker.yml V=0 T=0
-    - YML: .coveredci__start_reset_stop.yml
+    # - YML=.fuzzymonkey__start_reset_stop_docker.yml V=0 T=0
+    - YML: .fuzzymonkey__start_reset_stop.yml
       V: 0
       T: 0
-    # - YML: .coveredci__start_reset_stop_json.yml
+    # - YML: .fuzzymonkey__start_reset_stop_json.yml
     #   V: 0
     #   T: 0
-    # - YML: .coveredci__start_reset_stop_failing_script.yml
+    # - YML: .fuzzymonkey__start_reset_stop_failing_script.yml
     #   V: 0
     #   T: 1
-    # - YML: .coveredci.yml
+    # - YML: .fuzzymonkey.yml
     #   V: 0
     #   T: 0
-    # - YML: .coveredci__env.yml
+    # - YML: .fuzzymonkey__env.yml
     #   V: 0
     #   T: 0
-    # - YML: .coveredci__doc_typo.yml
+    # - YML: .fuzzymonkey__doc_typo.yml
     #   V: 2
     #   T: 2
-    # - YML: .coveredci__doc_typo_json.yml
+    # - YML: .fuzzymonkey__doc_typo_json.yml
     #   V: 2
     #   T: 2
 
@@ -29,32 +29,30 @@ install:
   - choco install erlang --version 20.0
   - choco install rebar3
   - rebar3 --version
-  - appveyor DownloadFile https://github.com/FuzzyMonkeyCo/monkey/releases/download/0.14.0/testman-Windows-x86_64.exe
+  - appveyor DownloadFile https://github.com/FuzzyMonkeyCo/monkey/releases/download/0.15.0/monkey-Windows-x86_64.exe
   - ls -lha
-  - appveyor DownloadFile https://goo.gl/Wb1JeU #-FileName /tmp/eh
-  - ls -lha
-  # - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/Wb1JeU
-  - chmod +x testman.exe
-  - ./testman.exe --version
+  - curl -fsSL --no-buffer -A "%U%" -e "%R%" -o /tmp/eh https://goo.gl/3d7tPe
+  - chmod +x /tmp/eh
+  - ./monkey.exe --version
 
 build:
   parallel: true
 
 build_script:
   - rebar3 as prod release
-  - if [[ %YML% != .coveredci.yml ]]; then cp %YML% .coveredci.yml; fi
+  - if [[ %YML% != .fuzzymonkey.yml ]]; then cp %YML% .fuzzymonkey.yml; fi
   - |
-    if [[ %YML% == .coveredci__doc_typo.yml ]]; then
+    if [[ %YML% == .fuzzymonkey__doc_typo.yml ]]; then
       sed -i s/consumes:/consume:/ priv/openapi2v1.yml
     fi
   - |
-    if [[ %YML% == .coveredci__doc_typo_json.yml ]]; then
+    if [[ %YML% == .fuzzymonkey__doc_typo_json.yml ]]; then
       sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
     fi
-  - testman validate; [[ $? -eq %V% ]]
-  - testman test; [[ $? -eq $T ]]
+  - monkey validate; [[ $? -eq %V% ]]
+  - monkey fuzz; [[ $? -eq $T ]]
   - |
-    if [[ $YML == .coveredci__start_reset_stop_docker.yml ]]; then
+    if [[ $YML == .fuzzymonkey__start_reset_stop_docker.yml ]]; then
       [[ 0 -eq $(docker ps -q | wc -l) ]]
     else
       ! which docker
@@ -62,4 +60,4 @@ build_script:
     fi
 
 on_failure:
-  - tail -n 999 /tmp/.testman_*_*.log
+  - tail -n 999 /tmp/.monkey_*_*.log
