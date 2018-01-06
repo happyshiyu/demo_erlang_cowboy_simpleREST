@@ -11,7 +11,7 @@ documentation:
 
 # Documentation's 'host' & 'port' can be resolved from the environment:
 # The mustache syntax:  {{ env "a_var" }}
-# Gets resolved by testman into the result of `echo -n $a_var`.
+# Gets resolved by `monkey` into the result of `echo -n $a_var`.
 # Note that unset variables or empty values result in a runtime error.
 
 start:

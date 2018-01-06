@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Do it like Travis, to debug testman
+# Bend it like Travis, to debug monkey
 
 set -o errexit
 set -o errtrace
@@ -11,72 +11,72 @@ set -o xtrace
 declare -a YMLs Vs Ts
 declare -i i=0
 
-YMLs[$i]=.coveredci__start_reset_stop_docker.yml
+YMLs[$i]=.fuzzymonkey__start_reset_stop_docker.yml
 Vs[$i]=0
 Ts[$i]=0
 ((i+=1)) # Funny Bash thing: ((i++)) returns 1 only when i=0
 
-YMLs[$i]=.coveredci__start_reset_stop.yml
+YMLs[$i]=.fuzzymonkey__start_reset_stop.yml
 Vs[$i]=0
 Ts[$i]=0
 ((i+=1))
 
-YMLs[$i]=.coveredci__start_reset_stop_json.yml
+YMLs[$i]=.fuzzymonkey__start_reset_stop_json.yml
 Vs[$i]=0
 Ts[$i]=0
 ((i+=1))
 
-YMLs[$i]=.coveredci__start_reset_stop_failing_script.yml
+YMLs[$i]=.fuzzymonkey__start_reset_stop_failing_script.yml
 Vs[$i]=0
 Ts[$i]=1
 ((i+=1))
 
-YMLs[$i]=.coveredci.yml
+YMLs[$i]=.fuzzymonkey.yml
 Vs[$i]=0
 Ts[$i]=0
 ((i+=1))
 
-YMLs[$i]=.coveredci__env.yml
+YMLs[$i]=.fuzzymonkey__env.yml
 Vs[$i]=0
 Ts[$i]=0
 ((i+=1))
 
-YMLs[$i]=.coveredci__doc_typo.yml
+YMLs[$i]=.fuzzymonkey__doc_typo.yml
 Vs[$i]=2
 Ts[$i]=2
 ((i+=1))
 
-YMLs[$i]=.coveredci__doc_typo_json.yml
+YMLs[$i]=.fuzzymonkey__doc_typo_json.yml
 Vs[$i]=2
 Ts[$i]=2
 ((i+=1))
 
 
-testman=${TESTMAN:-testman}
-$testman --version
+monkey=${MONKEY:-monkey}
+$monkey --version
 rebar3 as prod release
 
 check() {
     printf '\e[1;3m%s\e[0m\n' "$YML"
-    if [[ $YML != .coveredci.yml ]]; then cp $YML .coveredci.yml; fi
-    if [[ $YML == .coveredci__doc_typo.yml ]]; then
+    if [[ $YML != .fuzzymonkey.yml ]]; then cp $YML .fuzzymonkey.yml; fi
+    if [[ $YML == .fuzzymonkey__doc_typo.yml ]]; then
         sed -i s/consumes:/consume:/ priv/openapi2v1.yml
     fi
-    if [[ $YML == .coveredci__doc_typo_json.yml ]]; then
+    if [[ $YML == .fuzzymonkey__doc_typo_json.yml ]]; then
         sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
     fi
 
     set +e
-    $testman validate; code=$?
+    $monkey validate; code=$?
     set -e
     [[ $code -eq $V ]]
     set +e
-    $testman test; code=$?
+    $monkey fuzz; code=$?
     set -e
     [[ $code -eq $T ]]
     set +e
 
-    git checkout -- .coveredci.yml
+    git checkout -- .fuzzymonkey.yml
     git checkout -- priv/openapi2v1.yml
     git checkout -- priv/openapi2v1.json
 

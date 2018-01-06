@@ -8,8 +8,8 @@ documentation:
 
 
 # Documentation validation errors will show up when running
-# * `testman validate` or
-# * `testman test`
+# * `monkey validate` or
+# * `monkey fuzz
 # as documentation validation is the first step.
 # Note though that once that beofre the 'start' step is executed,
 #  no changes to documentation will be taken into account.
