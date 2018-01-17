@@ -1,12 +1,9 @@
-#!/bin/bash
+#!/bin/bash -eux
 
 # Bend it like Travis, to debug monkey
 
-set -o errexit
 set -o errtrace
-set -o nounset
 set -o pipefail
-set -o xtrace
 
 declare -a YMLs Vs Ts
 declare -i i=0

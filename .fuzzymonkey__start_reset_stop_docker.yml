@@ -11,7 +11,7 @@ documentation:
 
 start:
   - docker --version
-  - docker build --compress --force-rm --pull --tag my_image .
+  - docker build --compress --force-rm --tag my_image .
   - CONTAINER_ID=$(docker run --rm --detach --publish 6773 my_image)
   - >
     cmd="$(docker port $CONTAINER_ID 6773/tcp)"
