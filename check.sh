@@ -53,8 +53,8 @@ monkey=${MONKEY:-monkey}
 $monkey --version
 rebar3 as prod release
 
-check() {
-    printf '\e[1;3m%s\e[0m\n' "$YML"
+setup() {
+    printf '\e[1;3m%s\e[0m\n' "$YML V=$V T=$T"
     if [[ $YML != .fuzzymonkey.yml ]]; then cp $YML .fuzzymonkey.yml; fi
     if [[ $YML == .fuzzymonkey__doc_typo.yml ]]; then
         sed -i s/consumes:/consume:/ priv/openapi2v1.yml
@@ -62,7 +62,9 @@ check() {
     if [[ $YML == .fuzzymonkey__doc_typo_json.yml ]]; then
         sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
     fi
+}
 
+check() {
     set +e
     $monkey validate; code=$?
     set -e
@@ -71,26 +73,36 @@ check() {
     $monkey fuzz; code=$?
     set -e
     [[ $code -eq $T ]]
-    set +e
+}
 
+cleanup() {
     git checkout -- .fuzzymonkey.yml
     git checkout -- priv/openapi2v1.yml
     git checkout -- priv/openapi2v1.json
 
-    [[ 0 -eq $(docker ps -q | wc -l) ]]
+    if docker ps | grep my_image; then
+        docker stop --timeout 0 $(docker ps | grep my_image | awk '{print $1;}')
+    fi
     ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items
 }
 
+errors=0
 YML=${YML:-}
 for i in "${!YMLs[@]}"; do
     V=${Vs[$i]}
     T=${Ts[$i]}
 
     if [[ -z "$YML" ]]; then
-        YML=${YMLs[$i]} V=$V T=$T check
+        YML=${YMLs[$i]} V=$V T=$T setup
+        YML=${YMLs[$i]} V=$V T=$T check || ((errors+=1))
+        YML=${YMLs[$i]} V=$V T=$T cleanup
     else
         if [[ $YML = ${YMLs[$i]} ]]; then
+            YML=$YML V=$V T=$T setup
             YML=$YML V=$V T=$T check
+            YML=$YML V=$V T=$T cleanup
+            break
         fi
     fi
 done
+exit $errors
