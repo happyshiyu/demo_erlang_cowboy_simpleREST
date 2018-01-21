@@ -52,9 +52,10 @@ Ts[$i]=2
 monkey=${MONKEY:-monkey}
 $monkey --version
 rebar3 as prod release
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
 setup() {
-    printf '\e[1;3m%s\e[0m\n' "$YML V=$V T=$T"
+    printf '\e[1;3m%s\e[0m\n' "$branch $YML V=$V T=$T"
     if [[ $YML != .fuzzymonkey.yml ]]; then cp $YML .fuzzymonkey.yml; fi
     if [[ $YML == .fuzzymonkey__doc_typo.yml ]]; then
         sed -i s/consumes:/consume:/ priv/openapi2v1.yml
@@ -76,6 +77,7 @@ check() {
 }
 
 cleanup() {
+    printf '\e[1;3m%s\e[0m\n' "$branch $YML V=$V T=$T ...done"
     git checkout -- .fuzzymonkey.yml
     git checkout -- priv/openapi2v1.yml
     git checkout -- priv/openapi2v1.json
