@@ -2,11 +2,15 @@ sudo: false
 language: erlang
 otp_release: 20.1
 
+cache:
+  directories:
+    - ~/.local/bin
+
 before_script:
   - curl -# --fail --output /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
   - chmod +x /usr/local/bin/rebar3
   - rebar3 --version
-  - sh <(curl -sfSL http://goo.gl/3d7tPe -A "$UA" -e "$R")
+  - monkey --update || sh <(curl -#fSL http://goo.gl/3d7tPe -A "$UA" -e "$R")
   - monkey --version
 script:
   - rebar3 as prod release
