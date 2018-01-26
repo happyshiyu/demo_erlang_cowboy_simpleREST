@@ -53,9 +53,12 @@ monkey=${MONKEY:-monkey}
 $monkey --version
 rebar3 as prod release
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+info() {
+    printf '\e[1;3m%s\e[0m\n' "$*"
+}
 
 setup() {
-    printf '\e[1;3m%s\e[0m\n' "$branch $YML V=$V T=$T"
+    info $branch $YML V=$V T=$T
     if [[ $YML != .fuzzymonkey.yml ]]; then cp $YML .fuzzymonkey.yml; fi
     if [[ $YML == .fuzzymonkey__doc_typo.yml ]]; then
         sed -i s/consumes:/consume:/ priv/openapi2v1.yml
@@ -69,15 +72,22 @@ check() {
     set +e
     $monkey validate; code=$?
     set -e
-    [[ $code -eq $V ]]
+    if  [[ $code -ne $V ]]; then
+        info $branch $YML V=$V T=$T ...failed
+        [[ $code -eq $V ]]
+    fi
     set +e
     $monkey fuzz; code=$?
     set -e
-    [[ $code -eq $T ]]
+    if  [[ $code -ne $T ]]; then
+        info $branch $YML V=$V T=$T ...failed
+        [[ $code -eq $T ]]
+    else
+        info $branch $YML V=$V T=$T ...passed
+    fi
 }
 
 cleanup() {
-    printf '\e[1;3m%s\e[0m\n' "$branch $YML V=$V T=$T ...done"
     git checkout -- .fuzzymonkey.yml
     git checkout -- priv/openapi2v1.yml
     git checkout -- priv/openapi2v1.json
