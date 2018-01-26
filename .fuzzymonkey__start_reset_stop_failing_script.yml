@@ -10,7 +10,7 @@ documentation:
 # If an error occurs while running a step's commands:
 # * the error is displayed
 # * the `stop` step is attempted (if different to current step)
-# * `monkey` exits with code 1
+# * `monkey` exits with code 7
 
 start:
   - |
