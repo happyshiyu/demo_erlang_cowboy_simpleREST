@@ -74,17 +74,17 @@ check() {
     set -e
     if  [[ $code -ne $V ]]; then
         info $branch $YML V=$V T=$T ...failed
-        [[ $code -eq $V ]]
+        return 1
     fi
     set +e
     $monkey fuzz; code=$?
     set -e
     if  [[ $code -ne $T ]]; then
         info $branch $YML V=$V T=$T ...failed
-        [[ $code -eq $T ]]
-    else
-        info $branch $YML V=$V T=$T ...passed
+        return 1
     fi
+    info $branch $YML V=$V T=$T ...passed
+    return 0
 }
 
 cleanup() {
@@ -111,7 +111,7 @@ for i in "${!YMLs[@]}"; do
     else
         if [[ $YML = ${YMLs[$i]} ]]; then
             YML=$YML V=$V T=$T setup
-            YML=$YML V=$V T=$T check
+            YML=$YML V=$V T=$T check || ((errors+=1))
             YML=$YML V=$V T=$T cleanup
             break
         fi
