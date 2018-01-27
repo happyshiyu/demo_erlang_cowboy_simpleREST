@@ -25,7 +25,7 @@ Ts[$i]=0
 
 YMLs[$i]=.fuzzymonkey__start_reset_stop_failing_script.yml
 Vs[$i]=0
-Ts[$i]=1
+Ts[$i]=7
 ((i+=1))
 
 YMLs[$i]=.fuzzymonkey.yml
@@ -95,7 +95,10 @@ cleanup() {
     if docker ps | grep my_image; then
         docker stop --timeout 0 $(docker ps | grep my_image | awk '{print $1;}')
     fi
-    ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items
+    if ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items; then
+        info Some instance is still running somewhere!
+        return 1
+    fi
 }
 
 errors=0

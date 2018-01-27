@@ -1,6 +1,6 @@
 sudo: false
 language: erlang
-otp_release: 20.1
+otp_release: 20.2
 
 cache:
   directories:
@@ -43,7 +43,7 @@ matrix:
       services: docker
     - env: YML=.fuzzymonkey__start_reset_stop.yml V=0 T=0
     - env: YML=.fuzzymonkey__start_reset_stop_json.yml V=0 T=0
-    - env: YML=.fuzzymonkey__start_reset_stop_failing_script.yml V=0 T=1
+    - env: YML=.fuzzymonkey__start_reset_stop_failing_script.yml V=0 T=7
     - env: YML=.fuzzymonkey.yml V=0 T=0
     - env: YML=.fuzzymonkey__env.yml V=0 T=0
     - env: YML=.fuzzymonkey__doc_typo.yml V=2 T=2
