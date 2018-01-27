@@ -1,4 +1,4 @@
-FROM erlang:20.2.2
+FROM erlang:20.2
 
 WORKDIR /opt/app
 COPY . $PWD
