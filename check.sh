@@ -10,17 +10,17 @@ declare -i i=0
 
 YMLs[$i]=.fuzzymonkey__start_reset_stop_docker.yml
 Vs[$i]=0
-Ts[$i]=1
+Ts[$i]=7
 ((i+=1)) # Funny Bash thing: ((i++)) returns 1 only when i=0
 
 YMLs[$i]=.fuzzymonkey__start_reset_stop.yml
 Vs[$i]=0
-Ts[$i]=1
+Ts[$i]=7
 ((i+=1))
 
 YMLs[$i]=.fuzzymonkey__start_reset_stop_json.yml
 Vs[$i]=0
-Ts[$i]=1
+Ts[$i]=7
 ((i+=1))
 
 YMLs[$i]=.fuzzymonkey__start_reset_stop_failing_script.yml
@@ -35,7 +35,7 @@ Ts[$i]=6
 
 YMLs[$i]=.fuzzymonkey__env.yml
 Vs[$i]=0
-Ts[$i]=1
+Ts[$i]=7
 ((i+=1))
 
 YMLs[$i]=.fuzzymonkey__doc_typo.yml
