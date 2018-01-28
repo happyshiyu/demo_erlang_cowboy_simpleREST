@@ -95,7 +95,7 @@ cleanup() {
     if docker ps | grep my_image; then
         docker stop --timeout 0 $(docker ps | grep my_image | awk '{print $1;}')
     fi
-    if ! curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items; then
+    if curl --output /dev/null --silent --fail --head http://localhost:6773/api/1/items; then
         info Some instance is still running somewhere!
         return 1
     fi
