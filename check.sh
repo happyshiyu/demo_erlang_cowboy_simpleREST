@@ -70,7 +70,7 @@ setup() {
 
 check() {
     set +e
-    $monkey validate; code=$?
+    $monkey lint; code=$?
     set -e
     if  [[ $code -ne $V ]]; then
         info $branch $YML V=$V T=$T ...failed

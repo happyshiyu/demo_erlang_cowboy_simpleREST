@@ -23,7 +23,7 @@ script:
     if [[ $YML == .fuzzymonkey__doc_typo_json.yml ]]; then
       sed -i 's/"consumes":/"consume":/' priv/openapi2v1.json
     fi
-  - monkey validate; [[ $? -eq $V ]]
+  - monkey lint; [[ $? -eq $V ]]
   - monkey fuzz; [[ $? -eq $T ]]
   - |
     if [[ $YML == .fuzzymonkey__start_reset_stop_docker.yml ]]; then
